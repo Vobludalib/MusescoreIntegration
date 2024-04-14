@@ -2,7 +2,8 @@ import music21 as m21
 from voicingGenerator import *
 
 # CRUCIAL FOR RENDERING CHORD SYMBOLS: MS4 IS STILL BUGGY AS HELL WHEN DOING COMMAND LINE DIRECT PNG RENDERING
-m21.environment.UserSettings()['musescoreDirectPNGPath'] = "/Applications/MuseScore 3.app/Contents/MacOS/mscore"
+# m21.environment.UserSettings()['musescoreDirectPNGPath'] = "/Applications/MuseScore 3.app/Contents/MacOS/mscore"
+m21.environment.UserSettings()['musescoreDirectPNGPath'] = "C:\\Program Files\\MuseScore 3\\bin\\Musescore3.exe"
 # print(m21.environment.UserSettings().getSettingsPath())
 
 sc = m21.converter.parse("./OtherTest.mxl")
