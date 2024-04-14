@@ -26,26 +26,23 @@ MuseScore {
 		anchors.left: window.left
 
 		onClicked: {
-			// writeScore(curScore, mscTempXmlFile.source, "xml");
-			// var content = "content=" + encodeURIComponent("YOYOYO");
+			writeScore(curScore, mscTempXmlFile.source, "xml");
+			var content = "hello";
 			var urlToServer = "http://127.0.0.1:" + serverPort();
 			var requestValue = "/plugin";
 			var sendUrl = urlToServer + requestValue;
 
 			console.log(sendUrl);
 			var request = new XMLHttpRequest();
-			request.onreadstatechange = function() {
-			if (request.readyState == XMLHttpRequest.Done)
-			{
-				var response = request.responseText
-				console.log("responseText : " + response);
-				// myFile.write(response)
-				// readScore(myFile.source)
-				// Qt.quit()
-			}
-			request.open("GET", sendUrl, true);
-			// request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
-			request.send();
+			request.open("POST", sendUrl, false);
+                        console.log("Request opened");
+			request.setRequestHeader("Content-Type", "text/plain")
+			request.setRequestHeader("Content-length", content.length);
+                        request.send(content);
+                        console.log("Request sent");
+                        console.log(request.readyState);
+                        console.log(request.responseText);
+                        
 		}
 	}
 
@@ -54,5 +51,4 @@ MuseScore {
 	{
 		return "5000";
 	}
-}
 }
