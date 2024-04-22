@@ -1,21 +1,26 @@
+import os
 import music21 as m21
 import sys
 import argparse
 from pathlib import Path
 
-m21.environment.UserSettings()['musescoreDirectPNGPath'] = "C:\\Program Files\\MuseScore 3\\bin\\Musescore3.exe"
-
 # Gets path of temp MXL file and returns path of new temp MXL file
-def annotate_top_voice(path: str) -> str:
+def annotate_top_voice(path: str, everyOther: bool = False, color: str = 'red') -> str:
     score = m21.converter.parse(str(path))
+    i = -1
     for elem in score.flatten().notes:
-        elem.notes[-1].style.color = 'red'
+        i += 1
+        if (not (not everyOther and i % 2 == 1)):
+            elem.notes[-1].style.color = str.upper(color)
+        
 
-    score.write("musicxml", fp="C:\\Users\\simon\\OneDrive\\Desktop\\Coding Projects\\MusescoreIntegration\\temp\\tempColoured.mxl")
+    score.write("musicxml", fp=(str(os.path.dirname(path)) + "\\tempColoured.mxl"))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("file_path", type=Path)
+    parser.add_argument('-tempPath', type=Path, help='Path to temporary file')
+    parser.add_argument('--everyOther', action='store_true', help='Option to only every other top note')
+    parser.add_argument('-c', type=str, help='Color in hex format')
     p = parser.parse_args()
-    print(p.file_path, type(p.file_path), p.file_path.exists())
-    annotate_top_voice(p.file_path)
+    annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.c)
+    print("OUTPUT", file=sys.stdout)
