@@ -1,9 +1,11 @@
-import QtQuick 2.9
-import QtQuick.Dialogs 1.0
-import Qt.labs.platform 1.0
+import QtQuick 2.1
+import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.0
 import MuseScore 3.0
 import FileIO 3.0
+import Qt.labs.folderlistmodel 2.2
+import Qt.labs.platform 1.0
+
 
 MuseScore {
 	menuPath: "Plugins.LaunchProcess"
@@ -22,7 +24,6 @@ MuseScore {
 	// Inspiration can be taken from abc_ImpEx.qml
 	// Config files for storing where script + temp folder is
 	// Get readAllStandardOutput working, so script can output return file path
-	// Get Linux up and running as dual boot - handling + testing different formats of file paths ('/' vs '\')
 	// Test on other MacOs computer (or after update) to see compat. issues with MacOs
 
 	onRun: {
@@ -48,22 +49,42 @@ MuseScore {
 		onError: console.log(msg)
 	}
 
-	TextField {
+	Text {
+		id: executablePath
+		text: qsTr(executableScript.source)
+		anchors.bottom: chooseExecutableButton.top
+		anchors.left: chooseExecutableButton.left
+		anchors.topMargin: 10
+		anchors.bottomMargin: 10
+		anchors.leftMargin: 10
+	}
+
+	FileDialog {
+		id: openDialog
+		title: qsTr("Please choose an executable file")
+		folder: shortcuts.home
+		onAccepted: {
+			console.log("You chose: " + openDialog.file)
+			executableScript.source = getLocalPath(String(openDialog.file));
+			executablePath.text = executableScript.source;
+		}
+		onRejected: {
+			console.log("Canceled")
+		}
+	}
+	
+	Button {
 		id: chooseExecutableButton
-		placeholderText: qsTr(executableScript.source)
+		text: qsTr("Choose executable")
 		anchors.bottom: window.bottom
 		anchors.left: window.left
 		anchors.topMargin: 10
 		anchors.bottomMargin: 10
 		anchors.leftMargin: 10
-		width: 300
-		height: 50
-		onAccepted: {
-			var path = text;
-			if (path)
-			{
-				executableScript.source = path;
-			}
+		width: 130
+		height: 20
+		onClicked: {
+			openDialog.open();
 		}
 	}
 
@@ -140,19 +161,54 @@ Item {
 	anchors.topMargin: 10
 	anchors.rightMargin: 10
 
-	TextField {
-		id: tempFolderSelectorTextField
-		anchors.right: debugOptions.right
-		placeholderText: qsTr(mscTempXmlFolder.source + mscTempXmlFile.source)
-		width: 250
-		height: 50
+	// TextField {
+	// 	id: tempFolderSelectorTextField
+	// 	anchors.right: debugOptions.right
+	// 	placeholderText: qsTr(mscTempXmlFolder.source + mscTempXmlFile.source)
+	// 	width: 250
+	// 	height: 50
+	// 	onAccepted: {
+	// 		var folder = text;
+	// 		console.log("You chose: " + folder)
+	// 		if (folder)
+	// 		{
+	// 			mscTempXmlFolder.source = folder;
+	// 		}
+	// 	}
+	// }
+
+	FolderDialog {
+		id: tempFolderDialog
+		title: qsTr("Please choose a temp folder")
+		folder: shortcuts.home
 		onAccepted: {
-			var folder = text;
-			console.log("You chose: " + folder)
-			if (folder)
-			{
-				mscTempXmlFolder.source = folder;
-			}
+			console.log("You chose: " + tempFolderDialog.folder)
+			mscTempXmlFolder.source = getLocalPath(String(tempFolderDialog.folder));
+			tempFolder.text = mscTempXmlFolder.source;
+		}
+		onRejected: {
+			console.log("Canceled")
+		}
+	}
+
+	Text {
+		id: tempFolder
+		text: qsTr(mscTempXmlFolder.source)
+		anchors.top: tempFolderButton.bottom
+		anchors.right: tempFolderButton.right
+		anchors.topMargin: 10
+	}
+
+	
+	Button {
+		id: tempFolderButton
+		text: qsTr("Choose temp folder")
+		anchors.right: debugOptions.right
+		width: 130
+		height: 20
+		onClicked: {
+			// tempFolderDialog.selectFolder = true;
+			tempFolderDialog.open();
 		}
 	}
 }
@@ -194,4 +250,16 @@ Button {
 		readScore("C:\\Users\\simon\\OneDrive\\Desktop\\CodingProjects\\MusescoreIntegration\\temp\\tempColoured.mxl");
 	}
 }
+
+	// Taken from abc_ImpEx
+    function getLocalPath(path) { // Remove "file://" from paths and third "/" from  paths in Windows
+        path = path.replace(/^(file:\/{2})/,"");
+        if (Qt.platform.os == "windows") { 
+			path = path.replace(/^\//,"");
+			path = path.replace(/\//g, "\\");
+		}
+		path = decodeURIComponent(path);            
+        return path;
+    }
+
 }
