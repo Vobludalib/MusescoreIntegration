@@ -245,14 +245,16 @@ Button {
 		var val = proc.waitForFinished(10000);
 		loadingText.visible = false;
 		var output = proc.readAllStandardOutput();
-		console.log("Finished python script");
-		console.log(output);
-		readScore("C:\\Users\\simon\\OneDrive\\Desktop\\CodingProjects\\MusescoreIntegration\\temp\\tempColoured.mxl");
+		console.log("Finished python script with output: " + output);
+		var correctOutputPath = getLocalPath(String(output));
+		console.log('"' + correctOutputPath + '"');
+		readScore(correctOutputPath);
 	}
 }
 
 	// Taken from abc_ImpEx
     function getLocalPath(path) { // Remove "file://" from paths and third "/" from  paths in Windows
+		path = path.trim();
         path = path.replace(/^(file:\/{2})/,"");
         if (Qt.platform.os == "windows") { 
 			path = path.replace(/^\//,"");

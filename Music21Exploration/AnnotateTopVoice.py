@@ -15,7 +15,8 @@ def annotate_top_voice(path: str, everyOther: bool = False, color: str = 'red') 
             elem.notes[-1].style.color = str.upper(color)
         
 
-    score.write("musicxml", fp=(str(os.path.dirname(path)) + "\\tempColoured.mxl"))
+    score.write("musicxml", fp=(str(os.path.dirname(path)) + "\\tempColoured.musicxml"))
+    return str(os.path.dirname(path)) + "\\tempColoured.musicxml"
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -30,5 +31,5 @@ if __name__ == '__main__':
     # types = argsparserToJson.get_argument_types(parser)
     # print(types)
 
-    annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.c)
-    print("OUTPUT", file=sys.stdout)
+    outputPath = annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.c)
+    print(outputPath, file=sys.stdout)
