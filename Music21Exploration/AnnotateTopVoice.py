@@ -3,6 +3,7 @@ import music21 as m21
 import sys
 import argparse
 from pathlib import Path
+import argsparserToJson
 
 # Gets path of temp MXL file and returns path of new temp MXL file
 def annotate_top_voice(path: str, everyOther: bool = False, color: str = 'red') -> str:
@@ -22,5 +23,12 @@ if __name__ == '__main__':
     parser.add_argument('--everyOther', action='store_true', help='Option to only every other top note')
     parser.add_argument('-c', type=str, help='Color in hex format')
     p = parser.parse_args()
-    annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.c)
-    print("OUTPUT", file=sys.stdout)
+
+    # Convert argparse to JSON
+    json_representation = argsparserToJson.argsparser_to_json(parser)
+    print(json_representation)
+    types = argsparserToJson.get_argument_types(parser)
+    print(types)
+
+    # annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.c)
+    # print("OUTPUT", file=sys.stdout)
