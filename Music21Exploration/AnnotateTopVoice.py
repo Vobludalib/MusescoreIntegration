@@ -25,10 +25,10 @@ if __name__ == '__main__':
     p = parser.parse_args()
 
     # Convert argparse to JSON
-    json_representation = argsparserToJson.argsparser_to_json(parser)
-    print(json_representation)
-    types = argsparserToJson.get_argument_types(parser)
-    print(types)
+    # json_representation = argsparserToJson.argsparser_to_json(parser)
+    # print(json_representation)
+    # types = argsparserToJson.get_argument_types(parser)
+    # print(types)
 
-    # annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.c)
-    # print("OUTPUT", file=sys.stdout)
+    annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.c)
+    print("OUTPUT", file=sys.stdout)
