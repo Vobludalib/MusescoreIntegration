@@ -23,10 +23,11 @@ MuseScore {
 	// onRun could search what specific Python version to call with + install location of script given a name to look for
 	// Inspiration can be taken from abc_ImpEx.qml
 	// Config files for storing where script + temp folder is
-	// Get readAllStandardOutput working, so script can output return file path
-	// Test on other MacOs computer (or after update) to see compat. issues with MacOs
+
+	property var flags: {}
 
 	onRun: {
+		flags = { "--everyOther": { toPrint: false, value: "" }, "--color": { toPrint: true, value: "0xFFFFFF"} }
 		debugOptions.visible = false;
 		everyOtherColour.checked = true;
 		loadingText.visible = false;
@@ -62,7 +63,6 @@ MuseScore {
 	FileDialog {
 		id: openDialog
 		title: qsTr("Please choose an executable file")
-		folder: shortcuts.home
 		onAccepted: {
 			console.log("You chose: " + openDialog.file)
 			executableScript.source = getLocalPath(String(openDialog.file));
@@ -98,6 +98,7 @@ MuseScore {
 		anchors.leftMargin: 10
 		anchors.bottomMargin: 10
 		onClicked: {
+			logFlags();
 			if (debugOptions.visible)
 			{
 				debugOptions.visible = false;
@@ -120,38 +121,44 @@ Item {
 		onClicked: {
 			if (everyOtherColour.text == "Colouring every other note")
 			{
+				flags["--everyOther"].toPrint = false;
 				everyOtherColour.text = "Colouring every note";
 			} else {
-			everyOtherColour.text = "Colouring every other note";
+				flags["--everyOther"].toPrint = true;
+				everyOtherColour.text = "Colouring every other note";
+			}
 		}
 	}
-}
 
-Button {
-	id: colorPickerButton
-	text: qsTr("Choose colour: ")
-	anchors.top: everyOtherColour.bottom
-	anchors.topMargin: 20
-	onClicked: {
-		colorPicker.open();
+	Button {
+		id: colorPickerButton
+		text: qsTr("Choose colour: ")
+		anchors.top: everyOtherColour.bottom
+		anchors.topMargin: 20
+		onClicked: {
+			colorPicker.open();
+		}
 	}
-}
 
-Rectangle {
-	width: 20
-	height: width
-	color: colorPicker.color
-	border.width: 2
-	border.color: "black"
-	radius: width*0.5
-	anchors.left: colorPickerButton.right
-	anchors.top: colorPickerButton.top
-	anchors.leftMargin: 10
-}
+	Rectangle {
+		width: 20
+		height: width
+		color: colorPicker.color
+		border.width: 2
+		border.color: "black"
+		radius: width*0.5
+		anchors.left: colorPickerButton.right
+		anchors.top: colorPickerButton.top
+		anchors.leftMargin: 10
+	}
 
-ColorDialog {
-	id: colorPicker
-}
+	ColorDialog {
+		id: colorPicker
+		onAccepted: {
+			console.log("Chose color: " + colorPicker.color);
+			updateColor();
+		}
+	}
 }
 
 Item {
@@ -161,26 +168,9 @@ Item {
 	anchors.topMargin: 10
 	anchors.rightMargin: 10
 
-	// TextField {
-	// 	id: tempFolderSelectorTextField
-	// 	anchors.right: debugOptions.right
-	// 	placeholderText: qsTr(mscTempXmlFolder.source + mscTempXmlFile.source)
-	// 	width: 250
-	// 	height: 50
-	// 	onAccepted: {
-	// 		var folder = text;
-	// 		console.log("You chose: " + folder)
-	// 		if (folder)
-	// 		{
-	// 			mscTempXmlFolder.source = folder;
-	// 		}
-	// 	}
-	// }
-
 	FolderDialog {
 		id: tempFolderDialog
 		title: qsTr("Please choose a temp folder")
-		folder: shortcuts.home
 		onAccepted: {
 			console.log("You chose: " + tempFolderDialog.folder)
 			mscTempXmlFolder.source = getLocalPath(String(tempFolderDialog.folder));
@@ -229,18 +219,9 @@ Button {
 	anchors.leftMargin: 10
 
 	onClicked: {
-		print(executableScript.source);
-		var launchString = 'python "' + executableScript.source + '"';
-		var tempFilePath = mscTempXmlFolder.source + mscTempXmlFile.source;
-		writeScore(curScore, tempFilePath, "xml");
-		var launchString = launchString + ' -tempPath "' + tempFilePath + '"';
-		if (everyOtherColour.checked)
-		{
-			var launchString = launchString + ' --everyOther';
-		}
-		var launchString = launchString + ' -c "' + colorPicker.color + '"';
-		console.log(launchString);
-		proc.start(launchString);
+		var call = createCLICallFromFlags();
+		console.log(call);
+		proc.start(call);
 		loadingText.visible = true;
 		var val = proc.waitForFinished(10000);
 		loadingText.visible = false;
@@ -264,4 +245,33 @@ Button {
         return path;
     }
 
+	function updateColor() {
+		flags["--color"].value = colorPicker.color.toString();
+	}
+
+	function createCLICallFromFlags() {
+		var call = "python";
+		call = call + ' "' + executableScript.source + '"';
+		var tempFilePath = mscTempXmlFolder.source + mscTempXmlFile.source;
+		writeScore(curScore, tempFilePath, "xml");
+		call = call + ' --tempPath "' + tempFilePath + '"';
+		for (var key in flags) {
+			if (flags[key].toPrint) {
+				call = call + " " + key;
+				if (flags[key].value != "") {
+					call = call + ' "' + flags[key].value + '"';
+				}
+			}
+		}
+		return call;
+	}
+
+	function logFlags() {
+		for (var key in flags) {
+			console.log(key);
+			console.log(flags[key]);
+			console.log(flags[key].toPrint);
+			console.log(flags[key].value);
+		}
+	}
 }

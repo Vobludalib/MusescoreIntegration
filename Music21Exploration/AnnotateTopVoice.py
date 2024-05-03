@@ -20,9 +20,9 @@ def annotate_top_voice(path: str, everyOther: bool = False, color: str = 'red') 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-tempPath', type=Path, help='Path to temporary file')
+    parser.add_argument('--tempPath', type=Path, help='Path to temporary file')
     parser.add_argument('--everyOther', action='store_true', help='Option to only every other top note')
-    parser.add_argument('-c', type=str, help='Color in hex format')
+    parser.add_argument('--color', type=str, help='Color in hex format')
     p = parser.parse_args()
 
     # Convert argparse to JSON
@@ -31,5 +31,5 @@ if __name__ == '__main__':
     # types = argsparserToJson.get_argument_types(parser)
     # print(types)
 
-    outputPath = annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.c)
+    outputPath = annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.color)
     print(outputPath, file=sys.stdout)
