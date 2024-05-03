@@ -25,11 +25,5 @@ if __name__ == '__main__':
     parser.add_argument('--color', type=str, help='Color in hex format')
     p = parser.parse_args()
 
-    # Convert argparse to JSON
-    # json_representation = argsparserToJson.argsparser_to_json(parser)
-    # print(json_representation)
-    # types = argsparserToJson.get_argument_types(parser)
-    # print(types)
-
     outputPath = annotate_top_voice(p.tempPath, everyOther = p.everyOther, color = p.color)
     print(outputPath, file=sys.stdout)

@@ -19,9 +19,6 @@ MuseScore {
 		id: proc
 	}
 
-	// TODO:
-	// onRun could search what specific Python version to call with + install location of script given a name to look for
-	// Inspiration can be taken from abc_ImpEx.qml
 	// Config files for storing where script + temp folder is
 
 	property var flags: {}
