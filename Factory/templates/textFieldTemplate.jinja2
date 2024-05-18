@@ -1,0 +1,23 @@
+TextField {
+    id: {{id}}
+    placeholderText: qsTr("{{defaultValue}}")
+    anchors.top: {% if previousElemId == 'window' %}window.top{% else %}{{previousElemId}}.bottom{% endif %}
+    anchors.left: window.left
+    anchors.topMargin: 10
+    anchors.leftMargin: 10
+    anchors.bottomMargin: 10
+    width: 150
+    height: 30
+    onEditingFinished: {
+        flags["{{cla}}"].value = {{id}}.text;
+    }
+}
+
+Text {
+    id: {{id}}Prompt
+    text: qsTr("{{prompt}}")
+    anchors.left: {{id}}.right
+    anchors.top: {{id}}.top
+    anchors.bottom: {{id}}.bottom
+    anchors.leftMargin: 10
+}

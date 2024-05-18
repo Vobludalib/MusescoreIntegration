@@ -1,0 +1,17 @@
+CheckBox {
+    id: {{id}}
+    text: qsTr("{{prompt}}")
+    anchors.top: {% if previousElemId == 'window' %}window.top{% else %}{{previousElemId}}.bottom{% endif %}
+    anchors.left: window.left
+    anchors.topMargin: 10
+    anchors.leftMargin: 10
+    anchors.bottomMargin: 10
+    checked: {% if defaultValue %}true{% else %}false{% endif %}
+    onClicked: {
+        if ({{id}}.checked) {
+            flags["{{cla}}"].toPrint = true;
+        } else {
+            flags["{{cla}}"].toPrint = false;
+        }
+    }
+}

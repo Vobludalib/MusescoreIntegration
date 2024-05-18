@@ -1,0 +1,12 @@
+{
+    "pluginName": "LaunchStuff",
+    "pluginVersion": "0.1",
+    "readsScore": true,
+    "writesScore": true,
+    "defaultSavePath": "./temp/tempMusescore.mxl",
+    "defaultLoadPath": "./temp/tempProcessed.mxl",
+    "optionFields":
+    [
+        {"type": "checkBox", "promptString": "Enable weird feature?", "defaultValue": true, "cla": "--check"}
+    ]
+}

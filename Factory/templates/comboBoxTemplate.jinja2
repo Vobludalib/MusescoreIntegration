@@ -1,0 +1,31 @@
+ComboBox {
+    id: {{id}}
+    currentIndex: {{defaultIndex}}
+    width: 200
+    anchors.top: {% if previousElemId == 'window' %}window.top{% else %}{{previousElemId}}.bottom{% endif %}
+    anchors.left: window.left
+    anchors.topMargin: 10
+    anchors.leftMargin: 10
+    anchors.bottomMargin: 10
+    model: ListModel {
+        id: {{id}}Model{% for value in values %}
+        ListElement { text: "{{value.text}}"; value: "{{value.arg}}" }{% endfor %}
+    }
+    onCurrentIndexChanged: {
+        var val = {{id}}Model.get(currentIndex).value;
+        change{{id}}Value(val);
+    }
+}
+
+Text {
+    id: {{id}}Prompt
+    text: qsTr("{{prompt}}")
+    anchors.left: {{id}}.right
+    anchors.top: {{id}}.top
+    anchors.bottom: {{id}}.bottom
+    anchors.leftMargin: 10
+}
+
+function change{{id}}Value(val) {
+    flags["{{cla}}"].value = val;
+}

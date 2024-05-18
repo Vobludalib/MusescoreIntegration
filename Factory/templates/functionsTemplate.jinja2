@@ -1,0 +1,27 @@
+function createCLICallFromFlags() {
+    var call = "python";
+    call = call + ' "' + executableScript.source + '"';
+    var tempFilePath = mscTempXmlFolder.source + mscTempXmlFile.source;
+    writeScore(curScore, tempFilePath, "xml");
+    call = call + ' --tempPath "' + tempFilePath + '"';
+    for (var key in flags) {
+        if (flags[key].toPrint) {
+            call = call + " " + key;
+            if (flags[key].value != "") {
+                call = call + ' "' + flags[key].value + '"';
+            }
+        }
+    }
+    return call;
+}
+
+function getLocalPath(path) { // Remove "file://" from paths and third "/" from  paths in Windows
+    path = path.trim();
+    path = path.replace(/^(file:\/{2})/,"");
+    if (Qt.platform.os == "windows") { 
+        path = path.replace(/^\//,"");
+        path = path.replace(/\//g, "\\");
+    }
+    path = decodeURIComponent(path);            
+    return path;
+}

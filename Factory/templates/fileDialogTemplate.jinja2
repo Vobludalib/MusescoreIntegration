@@ -1,0 +1,39 @@
+FileDialog {
+    id: {{id}}Dialog
+    title: qsTr("Please choose a file")
+    onAccepted: {
+        var val = getLocalPath(String({{id}}Dialog.file));
+        console.log("You chose: " + val)
+        update{{id}}Flags(val);
+        {{id}}Text.text = val;
+    }
+    onRejected: {
+        console.log("Canceled")
+    }
+}
+
+Button {
+    id: {{id}}
+    text: qsTr("{{prompt}}")
+    anchors.top: {% if previousElemId == 'window' %}window.top{% else %}{{previousElemId}}.bottom{% endif %}
+    anchors.left: window.left
+    anchors.topMargin: 10
+    anchors.leftMargin: 10
+    anchors.bottomMargin: 10
+    onClicked: {
+        {{id}}Dialog.open();
+    }
+}
+
+Text {
+    id: {{id}}Text
+    text: qsTr(getLocalPath("{{defaultValue}}"))
+    anchors.left: {{id}}.right
+    anchors.top: {{id}}.top
+    anchors.bottom: {{id}}.bottom
+    anchors.leftMargin: 10
+}
+
+function update{{id}}Flags(path) { // fields cannot be changed inside OnAccepted handler
+      flags["--filePath"].value = path;
+}
