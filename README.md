@@ -55,3 +55,4 @@ Currently supported:
 ## TO DO
 
 - [ ] Document how to make custom implementations work with compiling CLargs
+- [ ] Wizard to auto-generate the JSON file
