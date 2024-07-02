@@ -7,11 +7,11 @@ import Qt.labs.folderlistmodel 2.2
 import Qt.labs.platform 1.0
 
 MuseScore {
-	menuPath: "{{pluginName}}"
+	menuPath: "Plugins.{{pluginName}}"
 	version: "{{pluginVersion}}"
-	id:window
+	id: window
 	width: 800; height: 500;
-	requiresScore: true
+	requiresScore: {% if requiresScore == true %}true{% else %}false{% endif %}
 	pluginType: "dialog"
 
 	QProcess {

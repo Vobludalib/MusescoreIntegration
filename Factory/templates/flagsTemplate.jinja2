@@ -3,4 +3,6 @@ property var flags: {}
 onRun: {
     flags = { {% for flag in flags %} "{{flag.name}}": { toPrint: {{flag.toPrint}}, value: {{flag.value}} }{% if not loop.last %},{% endif %}{% endfor %}}
     loadingText.visible = false;
+    executableScript.source = getLocalPath(executableScript.source);
+    mscTempFileStorePath.source = getLocalPath(mscTempFileStorePath.source);
 }

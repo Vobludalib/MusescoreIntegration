@@ -1,8 +1,10 @@
 function createCLICallFromFlags() {
     var call = "python";
     call = call + ' "' + executableScript.source + '"';
-    var tempFilePath = mscTempXmlFolder.source + mscTempXmlFile.source;
+    {% if writesScore == true %}
+    var tempFilePath = mscTempFileStorePath.source;
     writeScore(curScore, tempFilePath, "xml");
+    {% endif %}
     call = call + ' --tempPath "' + tempFilePath + '"';
     for (var key in flags) {
         if (flags[key].toPrint) {
@@ -18,6 +20,10 @@ function createCLICallFromFlags() {
 function getLocalPath(path) { // Remove "file://" from paths and third "/" from  paths in Windows
     path = path.trim();
     path = path.replace(/^(file:\/{2})/,"");
+
+    var pluginsFolder = window.filePath;
+    path = path.replace(/^\./, pluginsFolder);
+
     if (Qt.platform.os == "windows") { 
         path = path.replace(/^\//,"");
         path = path.replace(/\//g, "\\");

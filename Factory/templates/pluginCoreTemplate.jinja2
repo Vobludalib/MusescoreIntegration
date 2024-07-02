@@ -1,118 +1,12 @@
 FileIO {
     id: executableScript
-    source: "C:\\Users\\simon\\OneDrive\\Desktop\\CodingProjects\\MusescoreIntegration\\Music21Exploration\\AnnotateTopVoice.py"
+    source: "{{executableScriptPath}}"
     onError: console.log(msg)
 }
 
 FileIO {
-    id: mscTempXmlFile
-    source: "\\mscTempXmlFile.xml"
-}
-
-FileIO {
-    id: mscTempXmlFolder
-    source: "C:\\Users\\simon\\OneDrive\\Desktop\\CodingProjects\\MusescoreIntegration\\temp"
-    onError: console.log(msg)
-}
-
-Text {
-    id: executablePath
-    text: qsTr(executableScript.source)
-    anchors.bottom: chooseExecutableButton.top
-    anchors.left: chooseExecutableButton.left
-    anchors.topMargin: 10
-    anchors.bottomMargin: 10
-    anchors.leftMargin: 10
-}
-
-FileDialog {
-    id: openDialog
-    title: qsTr("Please choose an executable file")
-    onAccepted: {
-        console.log("You chose: " + openDialog.file)
-        executableScript.source = getLocalPath(String(openDialog.file));
-        executablePath.text = executableScript.source;
-    }
-    onRejected: {
-        console.log("Canceled")
-    }
-}
-
-Button {
-    id: chooseExecutableButton
-    text: qsTr("Choose executable")
-    anchors.bottom: window.bottom
-    anchors.left: window.left
-    anchors.topMargin: 10
-    anchors.bottomMargin: 10
-    anchors.leftMargin: 10
-    width: 130
-    height: 20
-    onClicked: {
-        openDialog.open();
-    }
-}
-
-Button {
-    id: debugButton
-    text: qsTr("Debug options")
-    anchors.bottom: window.bottom
-    anchors.right: window.right
-    anchors.topMargin: 10
-    anchors.rightMargin: 10
-    anchors.leftMargin: 10
-    anchors.bottomMargin: 10
-    onClicked: {
-        logFlags();
-        if (debugOptions.visible)
-        {
-            debugOptions.visible = false;
-        } else {
-            debugOptions.visible = true;
-        }
-    }
-}
-
-Item {
-	id: debugOptions
-	anchors.top: window.top
-	anchors.right: window.right
-	anchors.topMargin: 10
-	anchors.rightMargin: 10
-
-	FolderDialog {
-		id: tempFolderDialog
-		title: qsTr("Please choose a temp folder")
-		onAccepted: {
-			console.log("You chose: " + tempFolderDialog.folder)
-			mscTempXmlFolder.source = getLocalPath(String(tempFolderDialog.folder));
-			tempFolder.text = mscTempXmlFolder.source;
-		}
-		onRejected: {
-			console.log("Canceled")
-		}
-	}
-
-	Text {
-		id: tempFolder
-		text: qsTr(mscTempXmlFolder.source)
-		anchors.top: tempFolderButton.bottom
-		anchors.right: tempFolderButton.right
-		anchors.topMargin: 10
-	}
-
-	
-	Button {
-		id: tempFolderButton
-		text: qsTr("Choose temp folder")
-		anchors.right: debugOptions.right
-		width: 130
-		height: 20
-		onClicked: {
-			// tempFolderDialog.selectFolder = true;
-			tempFolderDialog.open();
-		}
-	}
+    id: mscTempFileStorePath
+    source: "{{defaultSavePath}}"
 }
 
 Text {
@@ -125,7 +19,7 @@ Button {
 	id: buttonSave
 	text: qsTr("Launch executable")
 	anchors.bottom: window.bottom
-	anchors.left: chooseExecutableButton.right
+	anchors.left: window.left
 	anchors.topMargin: 10
 	anchors.bottomMargin: 10
 	anchors.leftMargin: 10
@@ -139,8 +33,10 @@ Button {
 		loadingText.visible = false;
 		var output = proc.readAllStandardOutput();
 		console.log("Finished python script with output: " + output);
+		{% if readsScore == true %}
 		var correctOutputPath = getLocalPath(String(output));
 		console.log('"' + correctOutputPath + '"');
 		readScore(correctOutputPath);
+		{% endif %}
 	}
 }
