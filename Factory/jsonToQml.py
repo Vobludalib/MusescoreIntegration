@@ -2,6 +2,19 @@ import json
 import os
 import jinja2
 
+"""
+TODO:
+
+- Update github documentation
+    - Default save path is given in JSON
+    - No default read path, as that is returned as stdout by the process
+- Refactor code to handle the above explicitly DONE
+- Require score functionality DONE
+- No load/write also options DONE
+- Wizard
+- CLargs for this py script to be output qml file name DOCUMENT behaviour
+"""
+
 class Options:
     def __init__(self):
         self.pluginName = ""
@@ -9,24 +22,24 @@ class Options:
         self.readsScore = False
         self.writesScore = False
         self.defaultSavePath = ""
-        self.defaultLoadPath = ""
+        self.executableScriptPath = ""
         self.options = []
 
     def parse_json(self, file: str):
         with open(file, "r") as f:
             data = json.load(f)
             if data.get("pluginName") is not None:
-                self.name = data["pluginName"]
+                self.pluginName = data["pluginName"]
             if data.get("pluginVersion") is not None:
-                self.name = data["pluginVersion"]
+                self.pluginVersion = data["pluginVersion"]
             if data.get("readsScore") is True:
                 self.readsScore = True
             if data.get("writesScore") is True:
                 self.writesScore = True
             if data.get("defaultSavePath") is not None:
                 self.defaultSavePath = data["defaultSavePath"]
-            if data.get("defaultLoadPath") is not None:
-                self.defaultLoadPath = data["defaultLoadPath"]
+            if data.get("executableScriptPath") is not None:
+                self.executableScriptPath = data["executableScriptPath"]
             if data.get("optionFields") is not None:
                 for object in data["optionFields"]:
                     match object["type"]:
@@ -85,6 +98,18 @@ class Options:
 
         return "\n".join(texts)
 
+    def render_plugin_core(self, jinjaenv):
+        template = jinjaenv.get_template("pluginCoreTemplate.jinja2")
+        pluginVars = { "executableScriptPath": options.executableScriptPath, "defaultSavePath": options.defaultSavePath, "readsScore": options.readsScore, "writesScore": options.writesScore }
+        outputText = pluginCoreText = template.render(pluginVars)
+        return outputText
+
+    def render_functions(self, jinjaenv):
+        template = jinjaenv.get_template("functionsTemplate.jinja2")
+        functionVars = { "writesScore": options.writesScore }
+        outputText = template.render(functionVars)
+        return outputText
+
     class TextField:
         def __init__(self, prompt: str, defaultValue: str, cla: str):
             self.prompt = prompt
@@ -141,14 +166,14 @@ class Options:
 
 if __name__ == "__main__":
     options = Options()
-    templateLoader = jinja2.FileSystemLoader( searchpath=os.path.join(".", "Factory", "templates"))
+    templateLoader = jinja2.FileSystemLoader( searchpath=os.path.join(".", "templates"))
     jinjaenv = jinja2.Environment(loader=templateLoader)
-    options.parse_json(os.path.join(".", "Factory", "example.json"))
+    options.parse_json(os.path.join(".", "example.json"))
     flagsText = options.render_flags(jinjaenv)
     optionsText = options.render_all_options(jinjaenv)
-    pluginCoreText = jinjaenv.get_template("pluginCoreTemplate.jinja2").render()
-    functionsText = jinjaenv.get_template("functionsTemplate.jinja2").render()
-    fullVars = {"pluginName": options.pluginName, "pluginVersion": options.pluginVersion, "flagsInitText": flagsText, "claOptionsText": optionsText, "pluginCoreText": pluginCoreText, "functionsText": functionsText}
+    pluginCoreText = options.render_plugin_core(jinjaenv)
+    functionsText = options.render_functions(jinjaenv)
+    fullVars = {"pluginName": options.pluginName, "pluginVersion": options.pluginVersion, "requiresScore": options.readsScore, "flagsInitText": flagsText, "claOptionsText": optionsText, "pluginCoreText": pluginCoreText, "functionsText": functionsText}
     wholeText = jinjaenv.get_template("pluginTemplate.jinja2").render(fullVars)
     with open("out.qml", 'w') as f:
         f.write(wholeText)
