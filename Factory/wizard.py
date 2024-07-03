@@ -90,7 +90,8 @@ class Dumbledore:
                 print(f"Does your process need to load the result of your processing?\n\tSaying yes means that the plugin loads the output MusicXML file from your script.\ny/n")
 
             case self.Stage.SavePath:
-                print(f"Your script wants to read the current score. Where do you want to store this temp file?\n\tIf left empty, a default value of \"./temp\" is chosen.\n\tRelative file paths are only partially supported. A leading . is translated to the folder in which the .qml file will be placed in. Take this into account with how you structure the directory.")
+                print(f"Your script wants to read the current score. Where do you want to store this temp file?\n\tIf left empty, a default value of \"./temp/temp\" is chosen.\n\tRelative file paths are only partially supported. A leading . is translated to the folder in which the .qml file will be placed in. Take this into account with how you structure the directory.")
+                print(f"PLEASE ENSURE THE FORMAT IS: \"./xxx/xxx/nameOfFile\" WITHOUT AN EXTENSION, this will be auto-filled in as .mxl")
 
             case self.Stage.ExecutablePath:
                 print(f"What is the path to the script you want to call\n\tRelative file paths are only partially supported. A leading . is translated to the folder in which the .qml file will be placed in. Take this into account with how you structure the directory.")
@@ -187,7 +188,7 @@ class Dumbledore:
 
             case self.Stage.SavePath:
                 if inp == "":
-                    inp = "./temp"
+                    inp = "./temp/temp"
 
                 if not pathvalidate.is_valid_filepath(inp):
                     print(f"Not a valid file path, please try again. Press ENTER to proceed.")
@@ -335,8 +336,12 @@ class Dumbledore:
                     print("Not a valid filepath, make sure it ends in .qml. Press ENTER to proceed.")
                     input()
                     return
-                self.memory.jsonify(inp)
-                print("Finished creating the JSON. Press ENTER to proceed.")
+                
+                first, ext = os.path.splitext(inp)
+                jsonPath = first + '.json'
+                self.memory.jsonify(jsonPath)
+                jsonToQml.generate_qml_from_json(jsonPath, inp)
+                print("Finished creating the JSON and QML. Press ENTER to proceed.")
                 input()
                 self.currentStage = self.Stage.End
 

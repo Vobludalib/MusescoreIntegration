@@ -3,9 +3,9 @@ function createCLICallFromFlags() {
     call = call + ' "' + executableScript.source + '"';
     {% if writesScore == true %}
     var tempFilePath = mscTempFileStorePath.source;
-    writeScore(curScore, tempFilePath, "xml");
+    writeScore(curScore, tempFilePath, "mxl");
     {% endif %}
-    call = call + ' --tempPath "' + tempFilePath + '"';
+    call = call + ' --tempPath "' + tempFilePath + '.mxl"';
     for (var key in flags) {
         if (flags[key].toPrint) {
             call = call + " " + key;
