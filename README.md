@@ -95,3 +95,4 @@ PluginFolder
 - [ ] Document how to make custom implementations work with compiling CLargs
 - [x] Wizard to auto-generate the JSON file
 - [ ] Fix bugs in Wizard with rejecting options and it still saving progress
+- [ ] Finish example scripts to show how to use this
