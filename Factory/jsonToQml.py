@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import jinja2
 
 """
@@ -13,6 +14,7 @@ TODO:
 - No load/write also options DONE
 - Wizard
 - CLargs for this py script to be output qml file name DOCUMENT behaviour
+- Cancel comboBox while adding selectable values, not currently possible
 """
 
 class Options:
@@ -40,6 +42,8 @@ class Options:
                 self.defaultSavePath = data["defaultSavePath"]
             if data.get("executableScriptPath") is not None:
                 self.executableScriptPath = data["executableScriptPath"]
+                if os.path.splitext(self.executableScriptPath)[1] == ".py":
+                    self.isPython = True
             if data.get("optionFields") is not None:
                 for object in data["optionFields"]:
                     match object["type"]:
@@ -100,18 +104,19 @@ class Options:
 
     def render_plugin_core(self, jinjaenv):
         template = jinjaenv.get_template("pluginCoreTemplate.jinja2")
-        pluginVars = { "executableScriptPath": options.executableScriptPath, "defaultSavePath": options.defaultSavePath, "readsScore": options.readsScore, "writesScore": options.writesScore }
+        pluginVars = { "executableScriptPath": self.executableScriptPath, "defaultSavePath": self.defaultSavePath, "readsScore": self.readsScore, "writesScore": self.writesScore }
         outputText = pluginCoreText = template.render(pluginVars)
         return outputText
 
     def render_functions(self, jinjaenv):
         template = jinjaenv.get_template("functionsTemplate.jinja2")
-        functionVars = { "writesScore": options.writesScore }
+        functionVars = { "writesScore": self.writesScore }
         outputText = template.render(functionVars)
         return outputText
 
+    #TODO: Refactor for inheritance
     class TextField:
-        def __init__(self, prompt: str, defaultValue: str, cla: str):
+        def __init__(self, prompt: str = "", defaultValue: str = "", cla: str = ""):
             self.prompt = prompt
             self.defaultValue = defaultValue
             self.cla = cla
@@ -123,7 +128,7 @@ class Options:
             return outputText
 
     class FileDialog:
-        def __init__(self, prompt: str, defaultValue: str, cla: str):
+        def __init__(self, prompt: str = "", defaultValue: str = "", cla: str = ""):
             self.prompt = prompt
             self.defaultValue = defaultValue
             self.cla = cla
@@ -135,7 +140,7 @@ class Options:
             return outputText
 
     class ComboBox:
-        def __init__(self, prompt: str, values: list, defaultValue: str, cla: str):
+        def __init__(self, prompt: str = "", values: list = [], defaultValue: str = "", cla: str = ""):
             self.prompt = prompt
             self.values = values
             self.defaultValue = defaultValue
@@ -145,15 +150,15 @@ class Options:
             template = jinjaenv.get_template("comboBoxTemplate.jinja2")
             defaultIndex = 0
             for i in range(len(self.values)):
-                if self.values[i]["text"] == self.defaultValue:
+                self.values[i]["text"] = self.values[i]["name"]
+                if self.values[i]["name"] == self.defaultValue:
                     defaultIndex = i
-                    break
             templateVars = {"id": id, "previousElemId": previousElemId, "defaultIndex": defaultIndex, "cla": self.cla, "prompt": self.prompt, "values": self.values}
             outputText = template.render(templateVars)
             return outputText
 
     class CheckBox:
-        def __init__(self, prompt: str, defaultValue: bool, cla: str):
+        def __init__(self, prompt: str = "", defaultValue: str = "", cla: str = ""):
             self.prompt = prompt
             self.defaultValue = defaultValue
             self.cla = cla
@@ -164,16 +169,33 @@ class Options:
             outputText = template.render(templateVars)
             return outputText
 
-if __name__ == "__main__":
+def expected_usage_string() -> str:
+    return "Expected usage:\n\tpython jsonToQml.py {path_to_config_json.json} {path_to_output_qml_file.qml}"
+
+def generate_qml_from_json(inputPath: str, outputPath: str):
     options = Options()
     templateLoader = jinja2.FileSystemLoader( searchpath=os.path.join(".", "templates"))
     jinjaenv = jinja2.Environment(loader=templateLoader)
-    options.parse_json(os.path.join(".", "example.json"))
+    options.parse_json(os.path.join(inputPath))
     flagsText = options.render_flags(jinjaenv)
     optionsText = options.render_all_options(jinjaenv)
     pluginCoreText = options.render_plugin_core(jinjaenv)
     functionsText = options.render_functions(jinjaenv)
     fullVars = {"pluginName": options.pluginName, "pluginVersion": options.pluginVersion, "requiresScore": options.readsScore, "flagsInitText": flagsText, "claOptionsText": optionsText, "pluginCoreText": pluginCoreText, "functionsText": functionsText}
     wholeText = jinjaenv.get_template("pluginTemplate.jinja2").render(fullVars)
-    with open("out.qml", 'w') as f:
+    with open(outputPath, 'w') as f:
         f.write(wholeText)
+
+if __name__ == "__main__":
+    args = sys.argv
+    if len(args) != 3:
+        raise Exception(f"Expected amount of args: 2, got {len(args) - 1}\n{expected_usage_string()}")
+    if os.path.splitext(args[2])[1] != ".qml": 
+        raise Exception(f"Output file path is not .qml\n{expected_usage_string()}")
+    if os.path.splitext(args[1])[1] != ".json":
+        raise Exception(f"Input file path is not .json\n{expected_usage_string()}")
+    
+    inputPath = args[1]
+    outputPath = args[2]
+
+    generate_qml_from_json(inputPath, outputPath)    
