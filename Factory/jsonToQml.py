@@ -3,20 +3,6 @@ import os
 import sys
 import jinja2
 
-"""
-TODO:
-
-- Update github documentation
-    - Default save path is given in JSON
-    - No default read path, as that is returned as stdout by the process
-- Refactor code to handle the above explicitly DONE
-- Require score functionality DONE
-- No load/write also options DONE
-- Wizard
-- CLargs for this py script to be output qml file name DOCUMENT behaviour
-- Cancel comboBox while adding selectable values, not currently possible
-"""
-
 class Options:
     def __init__(self):
         self.pluginName = ""

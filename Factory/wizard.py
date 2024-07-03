@@ -1,10 +1,13 @@
 from enum import Enum
 import json
 import os
-import time
 import jsonToQml
-
 import pathvalidate
+
+"""
+TODO:
+- Cancel comboBox while adding selectable values, not currently possible
+"""
 
 class Dumbledore:
     class Stage(Enum): 
@@ -363,8 +366,7 @@ class Remembrall:
         self.savePath = ""
         self.executableScriptPath = ""
         self.options = []
-
-    # TODO
+         
     def jsonify(self, path: str):
         def convertOptionToDict(option):
             d = dict()

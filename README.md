@@ -18,7 +18,11 @@ Inspiration in how to proceed was taken from: [ABC_ImpEx](https://github.com/mis
 ## Using the Wizard
 The wizard is a tool to help you through generating the JSON file that the factory then uses to produce your plugin.
 
-TODO: HOW
+To launch this wizard, just use:
+
+```
+python {path/to/wizard.py}
+```
 
 If you want finer control, you may opt to write the JSON manually or tweak the wizard's output:
 
@@ -72,7 +76,22 @@ If you want to load a score that your process creates (i.e. your plugin readsSco
 
 ## How to package
 
+This is not a be-all-end-all way of packaging, but it is the way that I have found to work most consistently. If you are using the wizard and selecting default save paths, this will work.
+
+I recommend the following structure that you then zip and distribute to your users.
+
+```
+PluginFolder
+ ┣ temp
+ ┃ ┣ # Temp folder for holding the files
+ ┃ ┗ # your script will generate/read from
+ ┣ YourScript.py
+ ┣ YourPlugin.qml
+ ┗ AnyOtherDependencies.py
+```
+
 ## TO DO
 
 - [ ] Document how to make custom implementations work with compiling CLargs
-- [ ] Wizard to auto-generate the JSON file
+- [x] Wizard to auto-generate the JSON file
+- [ ] Fix bugs in Wizard with rejecting options and it still saving progress
