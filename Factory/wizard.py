@@ -45,7 +45,7 @@ class Dumbledore:
         if self.currentStage == self.Stage.End:
             currentStage = 8
 
-        string = f"[{"".join(['#' for i in range(0, currentStage)])}{"".join(['-' for i in range(0, totalStages-currentStage)])}] {int(100*(float(currentStage)/float(totalStages)))}%"
+        string = f"[{''.join(['#' for i in range(0, currentStage)])}{''.join(['-' for i in range(0, totalStages-currentStage)])}] {int(100*(float(currentStage)/float(totalStages)))}%"
         print(string)
 
     def print_already_added_options(self):
@@ -126,7 +126,7 @@ class Dumbledore:
                 print(f"What do you want the default value of the UI element to be?")
                 if type(self.currentOption) is jsonToQml.Options.ComboBox:
                     for i, elem in enumerate(self.currentOption.values):
-                        print(f"{i + 1}. {elem["name"]}")
+                        print(f"{i + 1}. {elem['name']}")
 
                 if type(self.currentOption) is jsonToQml.Options.CheckBox:
                     print(f"For checked by default, type: \"true\", otherwise type \"false\"")
@@ -146,7 +146,7 @@ class Dumbledore:
                 print(f"Where would you like to save this plugin? Enter a file path ending in .qml")
 
             case _:
-                print("END")
+                print("Wizard is finished. Press ENTER to proceed.")
                 input()
                 os.system('cls||clear')
                 exit()
@@ -328,6 +328,7 @@ class Dumbledore:
                 if inp == 'y':
                     self.currentStage = self.Stage.GenerateAskFilePath
                 else:
+                    self.memory.jsonify(f"./{self.memory.name}Config.json")
                     self.currentStage = self.Stage.End
 
             case self.Stage.GenerateAskFilePath:

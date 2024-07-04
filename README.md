@@ -95,4 +95,6 @@ PluginFolder
 - [ ] Document how to make custom implementations work with compiling CLargs
 - [x] Wizard to auto-generate the JSON file
 - [ ] Fix bugs in Wizard with rejecting options and it still saving progress
+- [ ] -- in wizard prompts showing up wrong
 - [ ] Finish example scripts to show how to use this
+- [ ] Add random UUID to temp files in case multiple instances run at the same time.
