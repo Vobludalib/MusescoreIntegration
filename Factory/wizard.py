@@ -171,7 +171,7 @@ class Dumbledore:
                     return
                 readsScore = True
                 if inp == 'n':
-                    self.memory.readsScore = False
+                    readsScore = False
                 self.memory.readsScore = readsScore
                 self.currentStage = self.Stage.WritesScore
 
@@ -180,10 +180,10 @@ class Dumbledore:
                     return
                 writesScore = True
                 if inp == 'n':
-                    self.memory.writesScore = False
+                    writesScore = False
                 self.memory.writesScore = writesScore
 
-                if self.memory.writesScore == True:
+                if self.memory.readsScore == True:
                     self.currentStage = self.Stage.SavePath
                 else:
                     self.currentStage = self.Stage.ExecutablePath
@@ -283,7 +283,7 @@ class Dumbledore:
 
             case self.Stage.OptionsDefaultValue:
                 if type(self.currentOption) is jsonToQml.Options.FileDialog:
-                    if not pathvalidate.is_valid_filepath(inp):
+                    if not os.path.exists(inp):
                         print(f"Not a valid file path, please try again. Press ENTER to proceed.")
                         input()
                         return
