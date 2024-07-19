@@ -11,6 +11,7 @@ class Options:
         self.writesScore = False
         self.defaultSavePath = ""
         self.executableScriptPath = ""
+        self.timeout = 10000
         self.options = []
 
     def parse_json(self, file: str):
@@ -54,6 +55,8 @@ class Options:
                             defaultValue = object.get("defaultValue", False)
                             cla = object.get("cla", "")
                             self.options.append(self.CheckBox(prompt, defaultValue, cla))
+            if data.get("timeout") is not None:
+                self.timeout = int(data["timeout"])
 
     def render_flags(self, jinjaenv):
         template = jinjaenv.get_template("flagsTemplate.jinja2")
@@ -90,7 +93,7 @@ class Options:
 
     def render_plugin_core(self, jinjaenv):
         template = jinjaenv.get_template("pluginCoreTemplate.jinja2")
-        pluginVars = { "executableScriptPath": self.executableScriptPath, "defaultSavePath": self.defaultSavePath, "readsScore": self.readsScore, "writesScore": self.writesScore }
+        pluginVars = { "executableScriptPath": self.executableScriptPath, "defaultSavePath": self.defaultSavePath, "readsScore": self.readsScore, "writesScore": self.writesScore, "timeout": self.timeout }
         outputText = pluginCoreText = template.render(pluginVars)
         return outputText
 

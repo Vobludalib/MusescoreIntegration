@@ -29,7 +29,7 @@ Button {
 		console.log(call);
 		proc.start(call);
 		loadingText.visible = true;
-		var val = proc.waitForFinished(10000);
+		var val = proc.waitForFinished({{timeout}});
 		loadingText.visible = false;
 		var output = proc.readAllStandardOutput();
 		console.log("Finished python script with output: " + output);

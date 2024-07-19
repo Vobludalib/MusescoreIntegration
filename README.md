@@ -35,13 +35,14 @@ Ignore the // as comments
     "readsScore": Bool // If the plugin needs to generate code to store the score into MXL
     "writesScore": Bool // If the plugin needs to generate code to load MXL into the score
     // If readsScore is true, the MS plugin will have requiresScore set to true
-    "defaultSavePath": String // File to which the MS score should be stored to as MXL
+    "defaultSavePath": String // Directory to which the MS score should be stored to as MXL
     "executableScriptPath": String // Path of the script to execute
+    "timeout": Integer // Time in ms before the process call will time out
     "optionFields": [optionObjects] // See below
 }
 ```
 
-defaultSavePath works with relative file paths in a limited extent (limitation of MS plugins that I have partially sidestepped via Regex). A . at the beggining of the file path (i.e. the . in "<u>.</u>/myfolder/myfile.mxl") will be replaced with the current path of the directory in which the plugin is running. This may inform how you structure the directory. For more information, see the [How to package](#how-to-package) section.
+defaultSavePath works with relative file paths in a limited extent (limitation of MS plugins that I have partially sidestepped via Regex). A . at the beggining of the file path (i.e. the . in "<u>.</u>/myfolder/") will be replaced with the current path of the directory in which the plugin is running. This may inform how you structure the directory. For more information, see the [How to package](#how-to-package) section.
 
 There is no defaultLoadPath, as the behaviour for how to get the path of the 'return' MXL file from your external process is different. See the [Expectations of your processs](#expectations-of-your-process) section.
 
@@ -96,4 +97,4 @@ PluginFolder
 - [x] Wizard to auto-generate the JSON file
 - [x] Fix bugs in Wizard with rejecting options and it still saving progress
 - [ ] Finish example scripts to show how to use this
-- [ ] Add random UUID to temp files in case multiple instances run at the same time.
+- [x] <del>Add random UUID to temp files in case multiple instances run at the same time.</del> Added time to file name for all generated temp files.

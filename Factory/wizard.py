@@ -13,7 +13,8 @@ class Dumbledore:
         WritesScore = 3
         SavePath = 4
         ExecutablePath = 5
-        OptionsExplanation = 6
+        Timeout = 6
+        OptionsExplanation = 7
         OptionsType = 8
         OptionsCLA = 9
         OptionsPrompt = 10
@@ -33,8 +34,8 @@ class Dumbledore:
     def print_progress_bar(self):
         totalStages = 8
         currentStage = self.currentStage.value
-        if self.currentStage.value >= 6 and self.currentStage.value <= 14:
-            currentStage = 6
+        if self.currentStage.value > 6 and self.currentStage.value <= 14:
+            currentStage = 7
         if self.currentStage == self.Stage.Generate or self.currentStage == self.Stage.GenerateAskFilePath:
             currentStage = 7
         if self.currentStage == self.Stage.End:
@@ -88,11 +89,14 @@ class Dumbledore:
                 print(f"Does your process need to load the result of your processing?\n\tSaying yes means that the plugin loads the output MusicXML file from your script.\ny/n")
 
             case self.Stage.SavePath:
-                print(f"Your script wants to read the current score. Where do you want to store this temp file?\n\tIf left empty, a default value of \"./temp/temp\" is chosen.\n\tRelative file paths are only partially supported. A leading . is translated to the folder in which the .qml file will be placed in. Take this into account with how you structure the directory.")
-                print(f"PLEASE ENSURE THE FORMAT IS: \"./xxx/xxx/nameOfFile\" WITHOUT AN EXTENSION, this will be auto-filled in as .mxl")
+                print(f"Your script wants to read the current score. What directory do you want to store this temp file?\n\tIf left empty, a default value of \"./temp/\" is chosen.\n\tRelative file paths are only partially supported. A leading . is translated to the folder in which the .qml file will be placed in. Take this into account with how you structure the directory.")
+                print(f"NOTE: The actual file name is generated based on the current time.")
 
             case self.Stage.ExecutablePath:
                 print(f"What is the path to the script you want to call\n\tRelative file paths are only partially supported. A leading . is translated to the folder in which the .qml file will be placed in. Take this into account with how you structure the directory.")
+
+            case self.Stage.Timeout:
+                print(f"How long do you want the plugin to wait before timing out the call to the process? Give a value in miliseconds.")
 
             case self.Stage.OptionsExplanation:
                 print(f"Now it's time to define the interfaces for selecting command-line arguments for the call to your script.\nIn this step, for each command-line argument you can select an appropriate type of UI element for your users to interact with.")
@@ -203,6 +207,17 @@ class Dumbledore:
                     return
                 
                 self.memory.executableScriptPath = inp
+                self.currentStage = self.Stage.OptionsExplanation
+
+            case self.Stage.Timeout:
+                try:
+                    val = int(inp)
+                    self.memory.timeout = val
+                except:
+                    print(f"Not a valid number, please try again. Press ENTER to proceed.")
+                    input()
+                    return
+                
                 self.currentStage = self.Stage.OptionsExplanation
 
             case self.Stage.OptionsExplanation:
@@ -362,6 +377,7 @@ class Remembrall:
         self.savePath = ""
         self.executableScriptPath = ""
         self.options = []
+        self.timeout = 10000
          
     def jsonify(self, path: str):
         def convertOptionToDict(option):
@@ -397,6 +413,7 @@ class Remembrall:
         d["optionFields"] = []
         for opt in self.options:
             d["optionFields"].append(convertOptionToDict(opt))
+        d["timeout"] = self.timeout
 
         with open(path, "w") as f:
             json.dump(d, f)

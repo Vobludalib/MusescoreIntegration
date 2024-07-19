@@ -2,7 +2,7 @@ function createCLICallFromFlags() {
     var call = "python";
     call = call + ' "' + executableScript.source + '"';
     {% if writesScore == true %}
-    var tempFilePath = mscTempFileStorePath.source;
+    var tempFilePath = mscTempFileStorePath.source + getCurrentTimeString();
     writeScore(curScore, tempFilePath, "mxl");
     {% endif %}
     call = call + ' --tempPath "' + tempFilePath + '.mxl"';
@@ -30,4 +30,11 @@ function getLocalPath(path) { // Remove "file://" from paths and third "/" from 
     }
     path = decodeURIComponent(path);            
     return path;
+}
+
+function getCurrentTimeString() {
+    var cT = new Date();
+    var timeString = cT.toLocaleDateString(Qt.locale("en_CA"), Locale.ShortFormat);
+    timeString = timeString + "-" + cT.getHours() + "-" + cT.getMinutes() + "-" + cT.getSeconds();
+    return timeString;
 }
