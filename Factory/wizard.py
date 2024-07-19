@@ -4,11 +4,6 @@ import os
 import jsonToQml
 import pathvalidate
 
-"""
-TODO:
-- Cancel comboBox while adding selectable values, not currently possible
-"""
-
 class Dumbledore:
     class Stage(Enum): 
         Start = -1
@@ -234,7 +229,7 @@ class Dumbledore:
                         obj = jsonToQml.Options.CheckBox()
                     
                     case 3:
-                        obj = jsonToQml.Options.ComboBox()
+                        obj = jsonToQml.Options.ComboBox(values = [])
 
                     case 4:
                         obj = jsonToQml.Options.FileDialog()
