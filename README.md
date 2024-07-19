@@ -98,3 +98,4 @@ PluginFolder
 - [x] Fix bugs in Wizard with rejecting options and it still saving progress
 - [ ] Finish example scripts to show how to use this
 - [x] <del>Add random UUID to temp files in case multiple instances run at the same time.</del> Added time to file name for all generated temp files.
+- [ ] Fix file path handling for FileDialog on Windows.
