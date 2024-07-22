@@ -93,6 +93,8 @@ PluginFolder
  ┗ AnyOtherDependencies.py
 ```
 
+In  the examples folder, you will find two examples of how to package the generated plugins. I have thoroughly tested AnnotateTopVoice. This directory structure works well. To try it out, just copy the AnnotateTopVoice folder into your Musescore plugins folder.
+
 ## TO DO
 
 - [x] Document how to make custom implementations work with compiling CLargs
