@@ -13,7 +13,9 @@ The QML code this script produces has no guarantees as to code quality or extend
 
 Inspiration in how to proceed was taken from: [ABC_ImpEx](https://github.com/mist13/ABC_ImpEx)
 
-**THE PLUGINS GENERATED ARE WRITTEN FOR MUSESCORE 3.6** - I will hopefully update to 4.x after the Musescore plugin changes go through on their end and are properly documented.
+**THE PLUGINS GENERATED ARE WRITTEN FOR MUSESCORE 3.6**
+
+For information about how to extend my boilerplated code, go see the Technical documentation in documentation.md. **I ran into technical hurdles that I have documented.**
 
 ## Using the Wizard
 The wizard is a tool to help you through generating the JSON file that the factory then uses to produce your plugin.
@@ -93,9 +95,9 @@ PluginFolder
 
 ## TO DO
 
-- [ ] Document how to make custom implementations work with compiling CLargs
+- [x] Document how to make custom implementations work with compiling CLargs
 - [x] Wizard to auto-generate the JSON file
 - [x] Fix bugs in Wizard with rejecting options and it still saving progress
-- [ ] Finish example scripts to show how to use this
+- [x] Finish example scripts to show how to use this
 - [x] <del>Add random UUID to temp files in case multiple instances run at the same time.</del> Added time to file name for all generated temp files.
-- [ ] Fix file path handling for FileDialog on Windows.
+- [x] Fix file path handling for FileDialog on Windows.
