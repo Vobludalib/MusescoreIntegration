@@ -99,11 +99,10 @@ class Options:
 
     def render_functions(self, jinjaenv):
         template = jinjaenv.get_template("functionsTemplate.jinja2")
-        functionVars = { "writesScore": self.writesScore }
+        functionVars = { "readsScore": self.readsScore }
         outputText = template.render(functionVars)
         return outputText
 
-    #TODO: Refactor for inheritance
     class TextField:
         def __init__(self, prompt: str = "", defaultValue: str = "", cla: str = ""):
             self.prompt = prompt

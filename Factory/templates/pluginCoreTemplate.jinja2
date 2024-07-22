@@ -33,7 +33,7 @@ Button {
 		loadingText.visible = false;
 		var output = proc.readAllStandardOutput();
 		console.log("Finished python script with output: " + output);
-		{% if readsScore == true %}
+		{% if writesScore == true %}
 		var correctOutputPath = getLocalPath(String(output));
 		console.log('"' + correctOutputPath + '"');
 		readScore(correctOutputPath);

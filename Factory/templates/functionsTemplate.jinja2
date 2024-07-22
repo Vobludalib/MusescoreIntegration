@@ -1,11 +1,11 @@
 function createCLICallFromFlags() {
     var call = "python";
     call = call + ' "' + executableScript.source + '"';
-    {% if writesScore == true %}
+    {% if readsScore == true %}
     var tempFilePath = mscTempFileStorePath.source + getCurrentTimeString();
     writeScore(curScore, tempFilePath, "mxl");
-    {% endif %}
     call = call + ' --tempPath "' + tempFilePath + '.mxl"';
+    {% endif %}
     for (var key in flags) {
         if (flags[key].toPrint) {
             call = call + " " + key;
