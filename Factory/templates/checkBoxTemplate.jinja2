@@ -6,7 +6,7 @@ CheckBox {
     anchors.topMargin: 10
     anchors.leftMargin: 10
     anchors.bottomMargin: 10
-    checked: {% if defaultValue %}true{% else %}false{% endif %}
+    checked: {% if defaultValue == true %}true{% else %}false{% endif %}
     onClicked: {
         if ({{id}}.checked) {
             flags["{{cla}}"].toPrint = true;

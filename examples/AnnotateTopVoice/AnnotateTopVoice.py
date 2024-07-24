@@ -13,7 +13,6 @@ def annotate_top_voice(path: str, everyOther: bool = False, color: str = 'red') 
         if (not (not everyOther and i % 2 == 1)):
             elem.notes[-1].style.color = str.upper(color)
         
-
     score.write("musicxml", fp=(str(os.path.dirname(path)) + "\\tempColoured.musicxml"))
     return str(os.path.dirname(path)) + "\\tempColoured.musicxml"
 

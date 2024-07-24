@@ -103,5 +103,8 @@ In  the examples folder, you will find two examples of how to package the genera
 - [x] Finish example scripts to show how to use this
 - [x] <del>Add random UUID to temp files in case multiple instances run at the same time.</del> Added time to file name for all generated temp files.
 - [x] Fix file path handling for FileDialog on Windows.
-- [ ] Absolute paths stuck in script path after generating QML
+- [ ] Absolute paths stuck in script path after generating QML - likely just user error
 - [ ] https://github.com/bacor/delasol
+- [ ] Timeout in wizard + ability to back out of steps + combo box default value in wizard gets rendered to display value not cla
+- [ ] Document that --tempPath is reserved and HOW AND WHEN TO USE IT
+- [ ] Check box default value is wrong

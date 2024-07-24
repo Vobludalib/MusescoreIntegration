@@ -48,7 +48,7 @@ class Dumbledore:
         if len(self.memory.options) == 0: return
         print("Already added items:")
         for i, item in enumerate(self.memory.options):
-            print(f"{i + 1} - \"--{item.cla}\" {type(item)}")
+            print(f"{i + 1} - \"{item.cla}\" {type(item)}")
 
     def print_about_current_option(self):
         print("Current option being added:")
