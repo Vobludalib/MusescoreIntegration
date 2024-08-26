@@ -43,14 +43,14 @@ The above code is generated only when writesScore is true in the JSON for genera
 ## Setting the flags when interacting with UI elements
 This is where I found things to be very finnicky, maybe some QML wizard can enlighten me why.
 
-From the way I coded it, changed the flags dictionary is sometimes done inside the handlers related to the UI elements, sometime via seperate functions.
+From the way I coded it, changing the flags dictionary is sometimes done inside the handlers related to the UI elements, sometime via seperate functions.
 
 For example, for checkBoxes, the flags manipulation is done directly in the onClicked handler.
 
 However, for fileDialogs, I have to create a boilerplated function to call each time inside the onAccepted handler, as for some reason doing the manipulation inside the handler did not persist. If things seem weird, console.log() is your friend here.
 
 ## Executing python scripts is weird
-I have made sure that the code I generate makes the compilation to command-line calls correctly. I purposefully left the console.log() messages in where useful so you can verify this. However, for god-knows-what reason, even with a command-line call that works in the terminal run outside of Musescore, it sometimes just does not work. I would love to debug this, but because the Musescore QProcess API only exposes 3 (yes 3!) most primitive functions, there is no real way to debug this. I have found that most things work on Windows 10 fairly well, with MacOS not working at all, and Linux being similarly messed up. **The things you write are likely to be platform-dependant in a way that is not nice.**
+I have made sure that the code I generate makes the compilation to command-line calls correctly. I purposefully left the console.log() messages in where useful so you can verify this. However, for god-knows-what reason, even with a command-line call that works in the terminal run outside of Musescore, it sometimes just does not work. I would love to debug this, but because the Musescore QProcess API only exposes the 3 (yes 3!) most primitive functions, there is no real way to debug this. I have found that most things work on Windows 10 fairly well, with MacOS not working at all, and Linux being similarly messed up. **The things you write are likely to be platform-dependant in a way that is not nice.**
 
 ## Handling file paths
 I have tried my best to write an OK-ish way of parsing different platform path notations (thanks Windows) using the getLocalPath(). This works well enough for the compilation to coammand-line args, but does not 100% work for the text for FileDialogs. If you deem fit, please make a version of this function that works properly.
@@ -71,7 +71,7 @@ Great inspiration was taken initially from the abcImpEx plugin:
 https://musescore.org/en/project/abc-importexport
 
 
-If you indulge in the same journey of discovering how little documentation there is for this stuff, and how much in changes, all I can say is:
+If you set forth on the same journey of discovering how little documentation there is for this stuff, all I can say is:
 ```
  ________  ________  ________  ________          ___       ___  ___  ________  ___  __       
 |\   ____\|\   __  \|\   __  \|\   ___ \        |\  \     |\  \|\  \|\   ____\|\  \|\  \     
