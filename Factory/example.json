@@ -3,6 +3,7 @@
     "pluginVersion": "0.1",
     "readsScore": true,
     "writesScore": true,
+    "executableScriptPath": "./test.py",
     "defaultSavePath": "./temp/",
     "timeout": 10000,
     "optionFields":

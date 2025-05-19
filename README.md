@@ -123,3 +123,17 @@ Inspiration in how to proceed was taken from: [ABC_ImpEx](https://github.com/mis
 **THE PLUGINS GENERATED ARE WRITTEN FOR MUSESCORE 3.6**
 
 For information about how to extend my boilerplated code, go see the Technical documentation in documentation.md. **I ran into technical hurdles that I have documented.**
+
+## Basic troubleshooting:
+Some of the common issues that arise actually do not produce any kind of error messages and are very annoying to debug, as Musescore's support for this is very meh.
+
+### No error is thrown, but the script isn't being called (i.e. I don't read the expected stdout)
+
+There is a high chance that your script isn't being called because of the path to the script you provided to the wizard. Check that the path to your script in the generated .json file is in the form ```./path/to/script.py``` and not just ```path/to/script.py```.
+
+See documentation.md for more information on why this is an issue.
+
+### My Python script is failing to read a file that exists
+The Python script is actually invoked in a different directory than the directory of the plugin. A possible solution is in the technical documentation.
+
+See documentation.md for more information.

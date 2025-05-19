@@ -47,7 +47,7 @@ CheckBox {
 
 FileIO {
     id: executableScript
-    source: ""
+    source: "./test.py"
     onError: console.log(msg)
 }
 

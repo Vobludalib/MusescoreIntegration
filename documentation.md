@@ -57,6 +57,17 @@ I have tried my best to write an OK-ish way of parsing different platform path n
 
 Additionally, **if bugs crop up due to file paths**. It might be worth it to change the format of your file paths in your JSON that generates the QML, or mess around with the \\\ vs \ vs / in the code itself before you give it your end users.
 
+## Where the Python script is actually called
+The QProcess that gets created in the plugin does not have its home directory in the Plugins directory!!! Instead, the Python script is invoked from ```ProgramFiles\\\Musescore 3\\\bin``` (essentially the bin directory of Musescore itself - this can change based on where you installed Musescore).
+This means that if your Python script in any way uses relative file paths using '.', then this is where the directory of invocation is.
+
+### If your script isn't being called, check what the script path is.
+When using the wizard or plugin generator and you need to give the path to the Python script, you **MUST** have ```.\relative\path\to\script.py``` and not just ```relative\path\to\script.py```. 
+
+Now, that may seem counterintuitive; I did just say that '.' is weird. However, when using file paths in the generated plugin code, I have a function for dealing with this issue and turning leading '.'s into absolute file paths to the actual directory of the plugin.
+
+However, your Python script will **not** be able to use '.' directly. What you are likely to have to do is to use the path to the script (as the 0th command line argument in your main()) and extract the plugin directory from that.
+
 ## Links that helped me when trying to decipher QML:
 A lot of the documentation for what I am trying to achieve is hidden deep-down in forum posts. There is little to no official documentation or support for this process calling, and it is likely subject to great change in Musescore 4, which I have not even dared looking at.
 
